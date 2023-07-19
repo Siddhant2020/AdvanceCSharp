@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 
 namespace DemoLibrary
 {
-    internal class DigitalProductModel
+    public class DigitalProductModel : IProductModel
     {
         public string Title { get; set; }
         public bool HasOrderBeenCompleted { get; private set; }
+
+        public int TotalDownloadsLeft { get; private set; } = 5;
         public void ShipItem(CustomerModel customer)
         {
-            if (HasOrderBeenCompleted == false)
+            if (HasOrderBeenCompleted == false && TotalDownloadsLeft != 0)
             {
-                Console.WriteLine($"Simulating shipping {Title} to {customer.EmailAddress}");
-                HasOrderBeenCompleted = true;
+                Console.WriteLine($"Simulating emailing {Title} to {customer.EmailAddress}");
+                TotalDownloadsLeft -= 1;
+                if (TotalDownloadsLeft < 1)
+                {
+                    HasOrderBeenCompleted = true;
+                    TotalDownloadsLeft = 0;
+                }
             }
         }
     }
